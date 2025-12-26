@@ -1,0 +1,30 @@
+
+# Build y artefactos
+bin/
+obj/
+packages/
+.vscode/
+.local/
+.python_packages/
+node_modules/
+
+# Azure Functions
+# NO subas local.settings.json: contiene claves y secretos locales
+local.settings.json
+
+# Archivos temporales
+*.log
+*.tmp
+*.cache
+
+# Python (si usas funciones Python)
+__pycache__/
+*.pyc
+
+# .NET (si usas funciones C#)
+*.user
+*.suo
+
+# JavaScript/TypeScript
+dist/
+
