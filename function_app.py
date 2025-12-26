@@ -490,7 +490,7 @@ def analizar_transcripcion_con_ia(texto_vtt: str) -> Dict[str, Any]:
     client = openai.AzureOpenAI(
         azure_endpoint=endpoint,
         api_key=key,
-        api_version="2025-12-26"
+        api_version="2023-05-15"
     )
 
     # 3. Prompt
