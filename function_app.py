@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 import azure.functions as func
+from gestor_clickup import crear_tarea_madre, crear_subtareas_acuerdos
 
 
 app = func.FunctionApp()
@@ -489,7 +490,7 @@ def analizar_transcripcion_con_ia(texto_vtt: str) -> Dict[str, Any]:
     client = openai.AzureOpenAI(
         azure_endpoint=endpoint,
         api_key=key,
-        api_version="2023-05-15"
+        api_version="2025-12-26"
     )
 
     # 3. Prompt
@@ -621,18 +622,18 @@ def TimerComite(myTimer: func.TimerRequest) -> None:
 
                         logging.info("Enviando a ClickUp...")
                         
-                        #target_list_id = _env("CLICKUP_LIST_ID")
+                        target_list_id = _env("CLICKUP_LIST_ID")
                         resumen_texto = datos_ia.get("resumen", "Sin resumen")
-                        #task_madre_id = crear_tarea_madre(target_list_id, subject, resumen_texto)
+                        task_madre_id = crear_tarea_madre(target_list_id, subject, resumen_texto)
                         
-                        #if task_madre_id:
-                        #    lista_acuerdos = datos_ia.get("acuerdos", [])
-                        #    crear_subtareas_acuerdos(task_madre_id, target_list_id, lista_acuerdos)
+                        if task_madre_id:
+                            lista_acuerdos = datos_ia.get("acuerdos", [])
+                            crear_subtareas_acuerdos(task_madre_id, target_list_id, lista_acuerdos)
                             
-                        marcar_reunion_procesada(event_id, subject)
-                        logging.warning(f"✅ CICLO PARA '{subject}' COMPLETADO Y ENVIADO A CLICKUP.")
-                        #else:
-                        #    logging.error(f"Fallo al crear tarea en ClickUp para '{subject}'. Se reintentará en el próximo ciclo.")
+                            marcar_reunion_procesada(event_id, subject)
+                            logging.warning(f"✅ CICLO PARA '{subject}' COMPLETADO Y ENVIADO A CLICKUP.")
+                        else:
+                            logging.error(f"Fallo al crear tarea en ClickUp para '{subject}'. Se reintentará en el próximo ciclo.")
                     else:
                         logging.error(f"La IA no devolvió datos válidos para '{subject}'. Se reintentará.")
                 else:
